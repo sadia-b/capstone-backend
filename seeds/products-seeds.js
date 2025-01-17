@@ -1,9 +1,7 @@
-//import products from "../seed-data/products";
-
 export async function seed(knex) {
   // Deletes ALL existing entries
-  await knex("products").del();
-  await knex("products").insert([
+  await knex("product").del();
+  await knex("product").insert([
     {
       id: 1,
       type: "Cleanser",
@@ -100,7 +98,7 @@ export async function seed(knex) {
       type: "Toner",
       time: "Day",
       concern: "Acne",
-      brand: "Paula’s Choice",
+      brand: "Paula's Choice",
       name: "Skin Perfecting 2% BHA Liquid Exfoliant",
       ingredient: "Salicylic Acid",
       price: 49.0,
