@@ -23,7 +23,7 @@ router
         user_id,
       });
 
-      console.log(newFavouriteId);
+      await knex("product").where("id", product_id).update({ liked: true });
 
       const newFavouriteData = await knex("favourite")
         .join("product", "product.id", "favourite.product_id")
@@ -36,6 +36,7 @@ router
           "product.name",
           "product.ingredient",
           "product.price",
+          "product.liked",
           "product.photo",
           "product.photoDescription",
           "product.link"
@@ -62,6 +63,7 @@ router
           "product.name",
           "product.ingredient",
           "product.price",
+          "product.liked",
           "product.photo",
           "product.photoDescription",
           "product.link"
@@ -75,18 +77,30 @@ router
   });
 
 router.route("/:id").delete(async (req, res) => {
-  const itemId = req.params.id;
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: "Missing 'id' parameter." });
+  }
 
   try {
-    const favouriteItem = await knex("favourite").where({ id: itemId }).first();
-    if (!favouriteItem) {
-      return res.status(400).json({ message: "Favourite not found" });
+    const favourite = await knex("favourite").where("id", id).first();
+
+    if (!favourite) {
+      return res.status(404).json({ message: "Favourite not found." });
     }
 
-    await knex("favourite").where({ id: itemId }).del();
-    res.status(204).json({ message: `You have deleted item.` });
+    const { product_id } = favourite;
+
+    await knex("favourite").where("id", id).del();
+
+    await knex("product").where("id", product_id).update({ liked: false });
+
+    res.status(200).json({ message: "Favourite removed successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting the inventory item" });
+    res
+      .status(400)
+      .json({ message: `Error removing favourite`, error: error.message });
   }
 });
 

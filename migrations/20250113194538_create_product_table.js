@@ -12,6 +12,7 @@ export function up(knex) {
     table.string("name").notNullable();
     table.string("ingredient").notNullable();
     table.double("price", 15, 2).notNullable();
+    table.boolean("liked").notNullable();
     table.string("photo").notNullable();
     table.string("photoDescription").notNullable();
     table.text("link").notNullable();

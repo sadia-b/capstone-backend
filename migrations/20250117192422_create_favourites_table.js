@@ -5,7 +5,7 @@
 export function up(knex) {
   return knex.schema.createTable("favourite", (table) => {
     table.increments("id").primary();
-    table.integer("user_id").notNullable;
+    table.integer("user_id").notNullable();
     table
       .integer("product_id")
       .unsigned()
