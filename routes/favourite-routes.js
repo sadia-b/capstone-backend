@@ -80,21 +80,19 @@ router.route("/:id").delete(async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.status(400).json({ message: "Missing 'id' parameter." });
+    return res.status(400).json({ message: "Missing 'product_id' parameter." });
   }
 
   try {
-    const favourite = await knex("favourite").where("id", id).first();
+    const favourite = await knex("favourite").where("product_id", id).first();
 
     if (!favourite) {
       return res.status(404).json({ message: "Favourite not found." });
     }
 
-    const { product_id } = favourite;
+    await knex("favourite").where("product_id", id).del();
 
-    await knex("favourite").where("id", id).del();
-
-    await knex("product").where("id", product_id).update({ liked: false });
+    await knex("product").where("id", id).update({ liked: false });
 
     res.status(200).json({ message: "Favourite removed successfully." });
   } catch (error) {
