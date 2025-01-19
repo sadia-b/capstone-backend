@@ -26,4 +26,22 @@ router.route("/:concern").get(async (req, res) => {
   }
 });
 
+router.route("/:id").put(async (req, res) => {
+  const { id } = req.params;
+  const updatedProduct = req.body;
+
+  try {
+    const product = await knex("product").where({ id }).update(updatedProduct);
+
+    if (product === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const updatedProductData = await knex("product").where({ id });
+    res.json(updatedProductData[0]);
+  } catch (error) {
+    res.status(400).json({ message: `Error updating product: ${error}` });
+  }
+});
+
 export default router;
