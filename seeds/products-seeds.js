@@ -74,7 +74,7 @@ export async function seed(knex) {
     },
     {
       id: 6,
-      type: "Sleeping Mask",
+      type: "Mask",
       time: "Night",
       concern: "Dryness",
       brand: "Laneige",
